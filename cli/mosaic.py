@@ -15,7 +15,7 @@ import pdb
 ### Command line interface for mosaicking Sentinel-2 data ###
 #############################################################
 
-def _getBands(resolution):
+def _getBands(resolution, bands_whitelist):
     '''
     Get a list of Sentinel-2 bands given an input resolution
     
@@ -31,21 +31,28 @@ def _getBands(resolution):
     
     if resolution == 60 or resolution == 0:
         band_list.extend(['B01','B02','B03','B04','B05','B06','B07','B8A','B09','B11','B12'])
-        res_list.extend([60] * 11)
+        # res_list.extend([60] * 11)
         
     if resolution == 20 or resolution == 0:
         band_list.extend(['B02','B03','B04','B05','B06','B07','B8A','B11','B12'])
-        res_list.extend([20] * 9)
+        # res_list.extend([20] * 9)
         
     if resolution == 10 or resolution == 0:
         band_list.extend(['B02','B03','B04','B08'])
-        res_list.extend([10] * 4)
+        # res_list.extend([10] * 4)
+
+    band_list = list(set(band_list) & set(bands_whitelist))
+    res_list.extend([resolution] * len(band_list))
         
     return np.array(res_list), np.array(band_list)
 
 
 
-def main(source_files, extent_dest, EPSG_dest, resolution = 0, percentile = 25., level = '1C', start = '20150101', end = datetime.datetime.today().strftime('%Y%m%d'), improve_mask = False, colour_balance = False, processes = 1, output_dir = os.getcwd(), output_name = 'mosaic', masked_vals = 'auto', temp_dir = '/tmp', verbose = False):
+def main(source_files, extent_dest, EPSG_dest, resolution = 0, percentile = 25.,
+         level = '1C', start = '20150101', end = datetime.datetime.today().strftime('%Y%m%d'), improve_mask = False,
+         colour_balance = False, processes = 1, output_dir = os.getcwd(), output_name = 'mosaic', masked_vals = 'auto',
+         temp_dir = '/tmp', verbose = False,
+         bands  = ["B01", "B02", "B8A"]) :
     """main(source_files, extent_dest, EPSG_dest, start = '20150101', end = datetime.datetime.today().strftime('%Y%m%d'), resolution = 0, improve_mask = False, colour_balance = False, processes = 1, output_dir = os.getcwd(), output_name = 'mosaic', masked_vals = 'auto', temp_dir = '/tmp', verbose = False)
     
     Function to generate seamless mosaics from a list of Sentinel-2 level-2A input files.
@@ -69,7 +76,7 @@ def main(source_files, extent_dest, EPSG_dest, resolution = 0, percentile = 25.,
     """
     
     # Get output bands based on input resolution
-    res_list, band_list = _getBands(resolution)
+    res_list, band_list = _getBands(resolution, bands_whitelist=bands)
     
     # For each of the input resolutions
     for res in np.unique(res_list)[::-1]:
@@ -136,7 +143,8 @@ if __name__ == "__main__":
     optional.add_argument('-n', '--output_name', type=str, metavar = 'NAME', default = 'mosaic', help="Specify a string to precede output filename. Defaults to 'mosaic'.")
     optional.add_argument('-p', '--n_processes', type = int, metavar = 'N', default = 1, help = "Specify a maximum number of tiles to process in paralell. Bear in mind that more processes will require more memory. Defaults to 1.")
     optional.add_argument('-v', '--verbose', action='store_true', default = False, help = "Make script verbose.")
-    
+    optional.add_argument('-bands', '--bands', action='store_true', default = False, help = "Only mosaic these bands. pass as comma seperated string: B01,B02,B8A")
+
     # Get arguments
     args = parser.parse_args()
         
@@ -152,6 +160,9 @@ if __name__ == "__main__":
     # Find all matching granule files
     #infiles = sen2mosaic.IO.prepInfiles(infiles, args.level)
     
-    main(infiles, args.target_extent, args.epsg, resolution = args.resolution, percentile = args.percentile, level = args.level, start = args.start, end = args.end, improve_mask = args.improve_mask, colour_balance = args.colour_balance, processes = args.n_processes, output_dir = args.output_dir, output_name = args.output_name, masked_vals = masked_vals, temp_dir = args.temp_dir, verbose = args.verbose)
+    main(infiles, args.target_extent, args.epsg, resolution = args.resolution, percentile = args.percentile,
+         level = args.level, start = args.start, end = args.end, improve_mask = args.improve_mask,
+         colour_balance = args.colour_balance, processes = args.n_processes, output_dir = args.output_dir, output_name = args.output_name,
+         masked_vals = masked_vals, temp_dir = args.temp_dir, verbose = args.verbose, bands=bands)
     
     
