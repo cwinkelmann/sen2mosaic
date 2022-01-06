@@ -285,7 +285,10 @@ def _colourBalance(image, reference, aggressive = True, verbose = False):
 ### Primary functions ###
 #########################
 
-def buildComposite(source_files, band, md_dest, resolution = 20, level = '2A', output_dir = os.getcwd(), output_name = 'mosaic', start = '20150101', end = datetime.datetime.today().strftime('%Y%m%d'), step = 2000, improve_mask = False, processes = 1, percentile = 25., colour_balance = False, masked_vals = 'auto', output_mask = True, temp_dir = '/tmp', verbose = False, resampling = 0):
+def buildComposite(source_files, band, md_dest, resolution = 20, level = '2A', output_dir = os.getcwd(),
+                   output_name = 'mosaic', start = '20150101', end = datetime.datetime.today().strftime('%Y%m%d'),
+                   step = 2000, improve_mask = False, processes = 1, percentile = 25., colour_balance = False,
+                   masked_vals = 'auto', output_mask = True, temp_dir = '/tmp', verbose = False, resampling = 0):
     """
     
     Function to generate seamless mosaics from a list of Sentinel-2 level-1C/2A input files.

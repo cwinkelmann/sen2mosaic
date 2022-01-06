@@ -154,7 +154,8 @@ class LoadScene(object):
         self.metadata = Metadata(self.extent, self.resolution, self.EPSG)
         
         # Test that all expected images are present
-        self.__checkFilesPresent()
+        ## FIXME Why is this check happening at all? generating the VRT at the end are quite optional
+        ## self.__checkFilesPresent()
         
         
     def __getGranule(self, granule):
@@ -324,6 +325,7 @@ class LoadScene(object):
     def __checkFilesPresent(self):
         '''
         Test that all expected images are present.
+        damn! spaghetti Code!!
         '''
         
         # Get a list of expected bands

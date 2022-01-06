@@ -41,6 +41,7 @@ def _getBands(resolution, bands_whitelist):
         band_list.extend(['B02','B03','B04','B08'])
         # res_list.extend([10] * 4)
 
+    # bands_whitelist = band_list ## TODO would this work?
     band_list = list(set(band_list) & set(bands_whitelist))
     res_list.extend([resolution] * len(band_list))
         
@@ -143,7 +144,7 @@ if __name__ == "__main__":
     optional.add_argument('-n', '--output_name', type=str, metavar = 'NAME', default = 'mosaic', help="Specify a string to precede output filename. Defaults to 'mosaic'.")
     optional.add_argument('-p', '--n_processes', type = int, metavar = 'N', default = 1, help = "Specify a maximum number of tiles to process in paralell. Bear in mind that more processes will require more memory. Defaults to 1.")
     optional.add_argument('-v', '--verbose', action='store_true', default = False, help = "Make script verbose.")
-    optional.add_argument('-bands', '--bands', action='store_true', default = False, help = "Only mosaic these bands. pass as comma seperated string: B01,B02,B8A")
+    optional.add_argument('-bands', '--bands', type=str, default = "B01,B02,B8A", help = "Only mosaic these bands. pass as comma seperated string: B01,B02,B8A")
 
     # Get arguments
     args = parser.parse_args()
@@ -163,6 +164,6 @@ if __name__ == "__main__":
     main(infiles, args.target_extent, args.epsg, resolution = args.resolution, percentile = args.percentile,
          level = args.level, start = args.start, end = args.end, improve_mask = args.improve_mask,
          colour_balance = args.colour_balance, processes = args.n_processes, output_dir = args.output_dir, output_name = args.output_name,
-         masked_vals = masked_vals, temp_dir = args.temp_dir, verbose = args.verbose, bands=bands)
+         masked_vals = masked_vals, temp_dir = args.temp_dir, verbose = args.verbose, bands=args.bands.split(","))
     
     
