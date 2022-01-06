@@ -99,7 +99,8 @@ def main(source_files, extent_dest, EPSG_dest, resolution = 0, percentile = 25.,
             
         # Build VRT output files for straightforward visualisation
         if verbose: print('Building .VRT images for visualisation')
-        
+
+        """
         # Natural colour image (10 m)
         sen2mosaic.mosaic.buildVRT('%s/%s_R%sm_B04.tif'%(output_dir, output_name, str(res)), '%s/%s_R%sm_B03.tif'%(output_dir, output_name, str(res)), '%s/%s_R%sm_B02.tif'%(output_dir, output_name, str(res)), '%s/%s_R%sm_RGB.vrt'%(output_dir, output_name, str(res)))
 
@@ -108,7 +109,7 @@ def main(source_files, extent_dest, EPSG_dest, resolution = 0, percentile = 25.,
             sen2mosaic.mosaic.buildVRT('%s/%s_R%sm_B08.tif'%(output_dir, output_name, str(res)), '%s/%s_R%sm_B04.tif'%(output_dir, output_name, str(res)), '%s/%s_R%sm_B03.tif'%(output_dir, output_name, str(res)), '%s/%s_R%sm_NIR.vrt'%(output_dir, output_name, str(res)))    
         else:
             sen2mosaic.mosaic.buildVRT('%s/%s_R%sm_B8A.tif'%(output_dir, output_name, str(res)), '%s/%s_R%sm_B04.tif'%(output_dir, output_name, str(res)), '%s/%s_R%sm_B03.tif'%(output_dir, output_name, str(res)), '%s/%s_R%sm_NIR.vrt'%(output_dir, output_name, str(res)))
-        
+        """
     if verbose: print('Processing complete!')
 
 
